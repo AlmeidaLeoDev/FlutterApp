@@ -1,58 +1,53 @@
-import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 
-bool isPrime(int num) {
-  if (num < 2) {
-    return false;
-  }
-  if (num == 2) {
-    return true;
-  } // 2 é o único número par que é primo
-  if (num % 2 == 0) {
-    return false;
-  }
-
-  // Se um número num tem um divisor maior que sua raiz quadrada, então ele já teria sido encontrado antes como um divisor menor.
-  for (int i = 3; i <= sqrt(num).toInt(); i += 2) {
-    // Se num for divisível por i, retorna false, pois encontrou um divisor além de 1 e num
-    if (num % i == 0) return false;
-  }
-
-  return true;
-}
-
-int sumOfDigits(int num) {
-  if (num < 0) {
-    throw ArgumentError('Número negativo não permitido.');
-  }
-
-  int soma = 0;
-  while (num > 0) {
-    // quando dividimos um número por 10, o resto sempre será o último dígito.
-    soma += num % 10;
-    // dividir por 10 "empurra" os dígitos para a direita, descartando o último
-    num ~/= 10;
-  }
-
-  return soma;
-}
+List<int> numeros = [1, 2, 3];
 
 void main() {
-  group('Testes de Número primo', () {
-    test('Número primo 7', () {
-      expect(isPrime(7), isTrue);
+ test('Adicionar elemento', () {
+   numeros.add(4);
+   expect(numeros.contains(4), isTrue);
+ });
+ test('Adicionar outra lista', () {
+   numeros.addAll([5, 6]);
+   expect(numeros.contains(5), isTrue);
+   expect(numeros.contains(6), isTrue);
+ });
+ test('Adicionar na posição', () {
+   numeros.insert(0, 0);
+   expect(numeros.indexOf(0), 0);
+ });
+ test('Remover elemento', () {
+   numeros.remove(2);
+   expect(numeros.contains(2), isFalse);
+ });
+ test('Remover na posição', () {
+   numeros.removeAt(0);
+   expect(numeros.contains(0), isFalse);
+ });
+ test('Testar tamanho', () {
+   expect(numeros.length, 5);
+ });
+ test('Testar vazio e não vazio', () {
+   expect(numeros.isEmpty, isFalse);
+   expect(numeros.isNotEmpty, isTrue);
     });
-    test('Número não primo 10', () {
-      expect(isPrime(10), isFalse);
-    });
-  });
-
-  group('Testes de Soma dos dígitos', () {
-    test('Soma dos dígitos de 123', () {
-      expect(sumOfDigits(123), equals(6));
-    });
-    test('Soma dos dígitos de -1', () {
-      expect(() => sumOfDigits(-1), throwsArgumentError);
-    });
-  });
+ test('Testar ordenação', () {
+   expect(numeros.reversed.toList(), [6, 5, 4, 3, 1]);
+   expect(numeros, [1, 3, 4, 5, 6]);
+   numeros = numeros.reversed.toList();
+   expect(numeros, [6, 5, 4, 3, 1]);
+   numeros.sort();
+   expect(numeros, [1, 3, 4, 5, 6]);
+ });
+ test('Testar percorrer lista', () {
+   int soma = 0;
+   for (int numero in numeros) {
+     soma += numero;
+   }
+   expect(soma, 19);
+   numeros = numeros.map((numero) => numero * 2).toList();
+   expect(numeros, [2, 6, 8, 10, 12]);
+   numeros = numeros.where((numero) => numero % 3 == 0).toList();
+   expect(numeros, [6, 12]);
+ });
 }
