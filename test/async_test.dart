@@ -27,6 +27,22 @@ Stream<int> count() async* {
  }
 }
 
+// 5 - Crie uma Stream que calcula a média das notas
+Stream<double> media(List<String> nomes) async* {
+ for (String nome in nomes) {
+  try{
+    List<double>? notas = await search(nome);
+    if (notas != null && notas.isNotEmpty) {
+      double soma = notas.reduce((a, b) => a + b);
+      double media = soma / notas.length;
+      yield media;
+      }
+  } on ArgumentError catch (e) {
+      yield* Stream.error(e);
+    }
+ }
+}
+
 void main() {
  group('Testes de programação assíncrona', () {
    late Future<int> result;
@@ -54,6 +70,20 @@ void main() {
          expect(resultados, [1, 2, 3]);
        },
        onError: (error) => expect(error, isNotNull),
+     );
+   });
+
+   // Testes: Stream que calcula a média das notas
+   test('Testando media em Stream', () {
+     List<double> resultados = [];
+     media(['Maria', 'Paula', 'Bruna']).listen(
+       (resultado) {
+         resultados.add(resultado);
+       },
+       onDone: () {
+         expect(resultados, [8.5, 7]);
+       },
+       onError: (error) => expect(error, isA<ArgumentError>()),
      );
    });
  });
